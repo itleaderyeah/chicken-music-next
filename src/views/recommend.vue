@@ -1,5 +1,5 @@
 <template>
-  <div class="recommend" v-loading:[loadingText]="loading">
+  <div class="recommend" v-loading="loading">
     <scroll class="recommend-content">
       <div>
         <div class="slider-wrapper">
@@ -42,7 +42,6 @@
     setup() {
       const sliders = ref([])
       const albums = ref([])
-      const loadingText = ref('正在载入...')
       const loading = computed(() => !sliders.value.length && !albums.value.length)
       onMounted(async () => {
         const response = await getRecommend()
@@ -54,8 +53,7 @@
       return {
         sliders,
         albums,
-        loading,
-        loadingText
+        loading
       }
     }
   })
