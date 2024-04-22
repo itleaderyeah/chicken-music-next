@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import { defineComponent, ref, onMounted } from 'vue'
+  import { defineComponent } from 'vue'
   import { getSingerList } from '@/service/singer'
   import IndexList from '@/components/base/index-list/index-list'
 
@@ -19,7 +19,7 @@
     },
     async created() {
       const response = await getSingerList()
-      this.singers =  response.singers
+      this.singers = response.singers
     }
   })
 </script>
