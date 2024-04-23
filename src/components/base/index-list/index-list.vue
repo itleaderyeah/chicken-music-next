@@ -1,5 +1,5 @@
 <template>
-  <scroll class="index-list" :probe-type="3" @scroll="onScroll">
+  <scroll class="index-list" :probe-type="3" @scroll="onScroll" ref="scrollRef">
     <ul ref="groupRef">
       <li v-for="group in data" :key="group.title" class="group">
         <h2 class="title">{{group.title}}</h2>
@@ -11,6 +11,20 @@
         </ul>
       </li>
     </ul>
+    <div class="list-shortcut">
+      <ul>
+        <li
+          v-for="(group, index) in data"
+          :key="group.title"
+          :data-index="index"
+          class="item"
+          :class="{'current': currentIndex === index}"
+          @touchstart.stop.prevent="onShortcutTouchStart"
+          @touchmove.stop.prevent="onShortcutTouchMove"
+          @touchend.stop.prevent
+          >{{group.title}}</li>
+      </ul>
+    </div>
     <div class="fixed" :style="fixedStyle" v-show="fixedTitle">
       <div class="fixed-title">{{fixedTitle}}</div>
     </div>
@@ -20,6 +34,7 @@
 <script>
   import { defineComponent } from 'vue'
   import useFixed from './use-fixed'
+  import useShortCut from './use-shortcut'
   import Scroll from '@/components/base/scroll/scroll'
 
   export default defineComponent({
@@ -36,13 +51,25 @@
         groupRef,
         onScroll,
         fixedTitle,
-        fixedStyle
+        fixedStyle,
+        currentIndex
       } = useFixed(props)
+      const {
+        scrollRef,
+        onShortcutTouchStart,
+        onShortcutTouchMove
+      } = useShortCut(props, groupRef)
       return {
+        // fixed
         groupRef,
+        scrollRef,
         onScroll,
         fixedTitle,
-        fixedStyle
+        fixedStyle,
+        // shortcut
+        currentIndex,
+        onShortcutTouchStart,
+        onShortcutTouchMove
       }
     }
   })
@@ -79,6 +106,27 @@
           color: $color-text-l;
           font-size: $font-size-medium;
         }
+      }
+    }
+    .list-shortcut {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      z-index: 30;
+      width: 20px;
+      padding: 20px 0;
+      border-radius: 10px;
+      text-align: center;
+      transform: translate(0, -50%);
+      background: rgba(0, 0, 0, 0.3);
+      ul > li.item {
+        line-height: 1;
+        padding: 3px;
+        color: hsla(0, 0%, 100%, 0.5);
+        font-size: 12px;
+      }
+      ul > li.current {
+        color: #ffcd32;
       }
     }
     .fixed {
