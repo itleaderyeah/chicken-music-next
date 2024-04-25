@@ -32,7 +32,6 @@ export default function useShortCut(props, groupRef) {
 
   return {
     scrollRef,
-    shortcutList,
     onShortcutTouchStart,
     onShortcutTouchMove
   }
